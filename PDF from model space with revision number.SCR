@@ -1,0 +1,67 @@
+(setq ss nil)
+(setq ss(ssget "X" '(( 2 . "A3_Shopdwg Sheet"))))
+(if (/= ss "nil")
+(progn
+   (setq tag "REVISION")
+   (setq sobj (vlax-ename->vla-object (ssname ss 0)))
+      (setq attrb (vlax-invoke sobj "GETATTRIBUTES"))
+      (foreach att attrb
+	(if (= (strcase (vlax-get-property att "TAGSTRING")) tag)
+	  (setq revval (vlax-get-property att "TEXTSTRING"))
+	)
+      )
+)
+(progn
+(alert "No titleblock found of name A3_Shopdwg Sheet ")
+(exit)
+)
+
+)
+(setq CurrDwgName (getvar "dwgname"))
+(setq Fname (substr CurrDwgName 1 (- (strlen CurrDwgName) 4)))
+(setq name (strcat (getvar "DWGPREFIX") Fname " (" revval ")" ".pdf"))
+;Command:
+FILEDIA
+;Enter new value for FILEDIA <1>:
+0
+;Command:
+-PLOT
+;Detailed plot configuration? [Yes/No] <No>: 
+Yes
+;Enter a layout name or [?] <Model>:
+Model
+;Enter an output device name or [?] <None>:
+DWG To PDF.pc3
+;Enter paper size or [?] <ANSI A (11.00 x 8.50 Inches)>:
+ANSI A (11.00 x 8.50 Inches)
+;Enter paper units [Inches/Millimeters] <Inches>:
+Inches
+;Enter drawing orientation [Portrait/Landscape] <Portrait>: 
+Landscape
+;Plot upside down? [Yes/No] <No>:
+No
+;Enter plot area [Display/Extents/Limits/View/Window] <Display>: 
+Extents
+;Enter plot scale (Plotted Inches=Drawing Units) or [Fit] <Fit>:
+Fit
+;Enter plot offset (x,y) or [Center] <0.00,0.00>:
+
+;Plot with plot styles? [Yes/No] <Yes>:
+Yes
+;Enter plot style table name or [?] (enter . for none) <>:
+.
+;Plot with lineweights? [Yes/No] <Yes>:
+Yes
+;Enter shade plot setting [As displayed/legacy Wireframe/legacy Hidden/Visualstyles/Rendered] <As displayed>:
+
+;Enter file name <C:\Work\solids-Model.pdf>:
+!name
+;Save changes to page setup? Or set shade plot quality? [Yes/No/Quality] <N>:
+No
+;Proceed with plot [Yes/No] <Y>:
+Yes
+;Command:
+FILEDIA
+;;;Enter new value for FILEDIA <1>:
+1
+(princ "DONE")
